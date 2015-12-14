@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">MX Player</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="drawer_open">打开</string>
+    <string name="drawer_close">关闭</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <array name="tabs_names" >
+        <item>个性推荐</item>
+        <item>歌单</item>
+        <item>主播电台</item>
+        <item>排行榜</item>
+    </array>
+    <string name="title_activity_music_base">MusicBaseActivity</string>
+    <string name="title_activity_song_list">SongListActivity</string>
+    <string name="title_activity_local_music">本地音乐</string>
+    
+    <array name="localMusic_tabNames">
+        <item>单曲</item>
+        <item>歌手</item>
+        <item>专辑</item>
+        <item>文件夹</item>
+    </array>
+
+</resources>

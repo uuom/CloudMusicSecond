@@ -1,0 +1,15 @@
+<resources>
+
+    <style name="AppTheme" parent="@style/AppBaseTheme"></style>
+
+    <!-- Base application theme. -->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- toolbar（actionbar）颜色 -->
+        <item name="colorPrimary">#ff67b7ff</item>
+        <!-- 状态栏颜色 -->
+        <item name="colorPrimaryDark">#3A5FCD</item>
+        <!-- 窗口的背景颜色 -->
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+</resources>
