@@ -30,7 +30,17 @@
             android:name=".LocalMusicActivity"
             android:label="@string/title_activity_local_music" >
         </activity>
-        <service android:name=".service.MusicPlayerService"/>
+
+        <service
+            android:name=".service.MusicPlayerService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+
+        <activity
+            android:name=".MusicPlayerActivity"
+            android:label="@string/title_activity_music_player" >
+        </activity>
     </application>
 
 </manifest>

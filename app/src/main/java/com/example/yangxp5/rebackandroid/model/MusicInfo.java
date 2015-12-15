@@ -10,7 +10,7 @@ import java.io.Serializable;
  * 歌曲信息
  * Created by uuom on 15-12-9.
  */
-public class MusicInfo implements Serializable, Parcelable {
+public class MusicInfo implements Parcelable {
 
     private String title;
     private String artist;

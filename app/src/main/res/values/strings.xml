@@ -25,5 +25,6 @@
         <item>专辑</item>
         <item>文件夹</item>
     </array>
+    <string name="title_activity_music_player">播放器</string>
 
 </resources>

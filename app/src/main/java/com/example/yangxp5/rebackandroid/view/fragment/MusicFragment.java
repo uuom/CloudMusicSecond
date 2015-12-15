@@ -67,6 +67,8 @@ public class MusicFragment  extends Fragment {
                 intent.putExtra(MusicPlayerService.ARGS_MUSIC_CURRENT_POSITION_KEY,position);
                 intent.putExtras(bundle);
                 getActivity().startService(intent);
+
+
             }
         });
         rv_musicList.setLayoutManager(new LinearLayoutManager(this.getActivity()));
