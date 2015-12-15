@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.yangxp5.rebackandroid" >
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -28,6 +30,7 @@
             android:name=".LocalMusicActivity"
             android:label="@string/title_activity_local_music" >
         </activity>
+        <service android:name=".service.MusicPlayerService"/>
     </application>
 
 </manifest>

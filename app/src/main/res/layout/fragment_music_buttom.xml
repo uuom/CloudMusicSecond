@@ -33,17 +33,17 @@
 
     <ImageView
         android:id="@+id/iv_play"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/pause"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/playbar_btn_pause"
         android:layout_alignTop="@+id/next"
         android:layout_toLeftOf="@+id/next"
         android:layout_toStartOf="@+id/next" />
 
     <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/next"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/playbar_btn_next"
         android:layout_alignBottom="@+id/tv_artist"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
