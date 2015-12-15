@@ -46,6 +46,7 @@ public class MusicPlayerService extends Service {
                 try {
                     MusicInfo musicInfo = (MusicInfo) dataList[currentMusicPosition];
                     try {
+                        System.out.println(musicInfo.getPath());
                         mMediaPlayer.setDataSource(musicInfo.getPath());
                         mMediaPlayer.prepareAsync();
                         mMediaPlayer.start();
