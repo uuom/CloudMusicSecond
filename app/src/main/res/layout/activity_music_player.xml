@@ -35,19 +35,22 @@
         android:gravity="center_vertical">
 
         <TextView
+            android:id="@+id/tv_music_currentTime"
             android:layout_width="36dp"
             android:layout_height="wrap_content"
             android:text="00:12"/>
 
         <ProgressBar
+            android:id="@+id/pb_music"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_margin="5dp"
             android:layout_height="wrap_content"
-            android:progress="24"
+            android:progress="0"
             style="?android:attr/progressBarStyleHorizontal"/>
 
         <TextView
+            android:id="@+id/tv_music_totalTime"
             android:layout_width="36dp"
             android:layout_height="wrap_content"
             android:text="04:12"
@@ -62,16 +65,19 @@
         android:gravity="center">
         
         <ImageView
+            android:id="@+id/iv_music_prev"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/lock_btn_prev"/>
 
         <ImageView
+            android:id="@+id/iv_music_play"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/lock_btn_play"/>
 
         <ImageView
+            android:id="@+id/iv_music_next"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/lock_btn_next"/>

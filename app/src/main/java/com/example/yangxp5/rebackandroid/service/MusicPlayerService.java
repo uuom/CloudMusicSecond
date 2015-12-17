@@ -12,8 +12,6 @@ import com.example.yangxp5.rebackandroid.model.MusicInfo;
 import com.example.yangxp5.rebackandroid.utils.Contants;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Created by yangxp5 on 2015/12/14.
@@ -27,7 +25,7 @@ public class MusicPlayerService extends Service {
     public static final int FLAG_CONTROL_PAUSE = 2;
     public static final int FLAG_CONTROL_RESUME = 3;
     public static final int FLAG_CONTROL_NEXT = 4;
-    public static final int FLAG_CONTROL_PRE = 4;
+    public static final int FLAG_CONTROL_PREV = 5;
 
     private Parcelable[] dataList;
     private int currentMusicPosition;
@@ -47,7 +45,7 @@ public class MusicPlayerService extends Service {
                 MusicInfo musicInfo = (MusicInfo) dataList[nextPosition()];
                 try{
                     Thread.sleep(2000);
-                    controllerMusicForNext(musicInfo);
+                    controllerPlatMusic(musicInfo);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -65,13 +63,28 @@ public class MusicPlayerService extends Service {
                 currentMusicPosition = intent.getIntExtra(ARGS_MUSIC_CURRENT_POSITION_KEY,0);
                 try {
                     MusicInfo musicInfo = (MusicInfo) dataList[currentMusicPosition];
-                    try {
-                        controllerMusicForNext(musicInfo);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    controllerPlatMusic(musicInfo);
+                    sendMusicChangeBroadcast(musicInfo);
                 }catch (Exception e){
-                    throw new RuntimeException("音乐播放出错了",e);
+                    e.printStackTrace();
+                }
+                break;
+            case FLAG_CONTROL_NEXT:   //下一首
+                MusicInfo nextMusicInfo = (MusicInfo) dataList[nextPosition()];
+                try{
+                    controllerPlatMusic(nextMusicInfo);
+                    sendMusicChangeBroadcast(nextMusicInfo);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
+            case FLAG_CONTROL_PREV: //上一首
+                MusicInfo prevMusicInfo = (MusicInfo) dataList[prevPosition()];
+                try{
+                    controllerPlatMusic(prevMusicInfo);
+                    sendMusicChangeBroadcast(prevMusicInfo);
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
                 break;
             case FLAG_CONTROL_RESUME :  //暂停恢复
@@ -90,18 +103,26 @@ public class MusicPlayerService extends Service {
                 stopBroadcastIntent.setAction(Contants.MUSIC_BUTTOM_ACTION_STOP_MUSIC);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(stopBroadcastIntent);
                 break;
-            case FLAG_CONTROL_NEXT:   //下一首
-                int position = nextPosition();
-                MusicInfo musicInfo = (MusicInfo) dataList[position];
-                try{
-                    controllerMusicForNext(musicInfo);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                break;
         }
 
         return super.onStartCommand(intent, flags, startId);
+    }
+
+
+    private void sendMusicChangeBroadcast(MusicInfo musicInfo){
+        Intent broadcastIntent1 = new Intent();
+        broadcastIntent1.setAction(Contants.MUSIC_BUTTOM_ACTION_CHANGE_MUSIC);
+        broadcastIntent1.putExtra(Contants.EXTRA_KEY_SINGLE_MUSICINFO, musicInfo);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent1);
+    }
+
+    private int prevPosition(){
+        if (currentMusicPosition == 0){
+            currentMusicPosition = dataList.length-1;
+        }else{
+            currentMusicPosition --;
+        }
+        return currentMusicPosition;
     }
 
     private int nextPosition(){
@@ -114,24 +135,18 @@ public class MusicPlayerService extends Service {
     }
 
     //播放下一首
-    private void controllerMusicForNext(MusicInfo musicInfo) throws IOException {
+    private void controllerPlatMusic(MusicInfo musicInfo) throws IOException {
         mMediaPlayer.reset();
         mMediaPlayer.setDataSource(musicInfo.getPath());
         mMediaPlayer.prepare();
         mMediaPlayer.start();
         currentPlayStatus = 1;
-
-        Intent broadcastIntent1 = new Intent();
-        broadcastIntent1.setAction(Contants.MUSIC_BUTTOM_ACTION_CHANGE_MUSIC);
-        broadcastIntent1.putExtra(Contants.EXTRA_KEY_SINGLE_MUSICINFO, musicInfo);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent1);
     }
 
 
     @Override
     public IBinder onBind(Intent intent) {
-        IBinder binder = new ServiceBinder();
-        return binder;
+        return new MusicPlayerServiceBinder();
     }
 
     @Override
@@ -142,7 +157,7 @@ public class MusicPlayerService extends Service {
         }
     }
 
-    public class ServiceBinder extends Binder{
+    public class MusicPlayerServiceBinder extends Binder{
         public MusicPlayerService getService(){
             return MusicPlayerService.this;
         }
@@ -170,5 +185,9 @@ public class MusicPlayerService extends Service {
             return (MusicInfo) dataList[currentMusicPosition];
         }
         return null;
+    }
+
+    public MediaPlayer getmMediaPlayer() {
+        return mMediaPlayer;
     }
 }

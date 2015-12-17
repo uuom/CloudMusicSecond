@@ -32,9 +32,7 @@
         </activity>
 
         <service
-            android:name=".service.MusicPlayerService"
-            android:enabled="true"
-            android:exported="true" >
+            android:name=".service.MusicPlayerService" >
         </service>
 
         <activity

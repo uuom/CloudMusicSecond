@@ -1,13 +1,11 @@
 package com.example.yangxp5.rebackandroid.view.fragment;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +20,6 @@ import com.example.yangxp5.rebackandroid.model.MusicInfo;
 import com.example.yangxp5.rebackandroid.service.MusicPlayerService;
 import com.example.yangxp5.rebackandroid.utils.Contants;
 
-import org.w3c.dom.Text;
-
 public class MusicButtomFragment extends Fragment {
 
     private ImageView iv_musicImg;
@@ -34,8 +30,6 @@ public class MusicButtomFragment extends Fragment {
     private LinearLayout ly_music;
 
     private int currentStatus = 0;
-
-    private MusicButtomBroadcastReceiver mMusicButtomBroadcastReceiver;
 
     public MusicButtomFragment() {
         // Required empty public constructor
@@ -49,12 +43,13 @@ public class MusicButtomFragment extends Fragment {
 
         initView(view);
 
+        //注册BroadcastReceiver
         LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         IntentFilter filter = new IntentFilter();
         filter.addAction(Contants.MUSIC_BUTTOM_ACTION_CHANGE_MUSIC);
         filter.addAction(Contants.MUSIC_BUTTOM_ACTION_STOP_MUSIC);
-        mMusicButtomBroadcastReceiver = new MusicButtomBroadcastReceiver();
-        localBroadcastManager.registerReceiver(mMusicButtomBroadcastReceiver, filter);
+        filter.addAction(Contants.MUSIC_BUTTOM_ACTION_PLAY_MUSIC);
+        localBroadcastManager.registerReceiver(new MusicButtomBroadcastReceiver(), filter);
 
         iv_play.setOnClickListener(new View.OnClickListener() {
             @Override
