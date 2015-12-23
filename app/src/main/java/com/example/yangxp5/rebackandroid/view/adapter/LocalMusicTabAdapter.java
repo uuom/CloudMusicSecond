@@ -11,9 +11,6 @@ import com.example.yangxp5.rebackandroid.model.MusicInfo;
 import com.example.yangxp5.rebackandroid.view.fragment.MusicFragment;
 import com.example.yangxp5.rebackandroid.view.fragment.TabFragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by yangxp5 on 2015/12/11.
  */

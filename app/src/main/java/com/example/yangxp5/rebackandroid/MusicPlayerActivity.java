@@ -7,26 +7,37 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.yangxp5.rebackandroid.model.MusicInfo;
 import com.example.yangxp5.rebackandroid.service.MusicPlayerService;
 import com.example.yangxp5.rebackandroid.utils.Contants;
+import com.yalantis.starwars.TilesFrameLayout;
+import com.yalantis.starwars.interfaces.TilesFrameLayoutListener;
+
+import java.lang.reflect.Field;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class MusicPlayerActivity extends ActionBarActivity implements View.OnClickListener {
+public class MusicPlayerActivity extends ActionBarActivity implements View.OnClickListener, TilesFrameLayoutListener {
 
     private Toolbar tb_toolbar;
     private CircleImageView civ_musicImage;
@@ -147,6 +158,52 @@ public class MusicPlayerActivity extends ActionBarActivity implements View.OnCli
         tv_music_currentTime = (TextView) findViewById(R.id.tv_music_currentTime);
         pb_music = (ProgressBar) findViewById(R.id.pb_music);
         tv_music_totalTime = (TextView) findViewById(R.id.tv_music_totalTime);
+
+        tilesFrameLayout = (TilesFrameLayout) findViewById(R.id.tiles_frame_layout);
+        tilesFrameLayout.setOnAnimationFinishedListener(this);
+
+        setTranslucentStatus();
+    }
+
+    private  TilesFrameLayout tilesFrameLayout;
+    @Override
+    public void onResume() {
+        super.onResume();
+        tilesFrameLayout.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        tilesFrameLayout.onPause();
+    }
+
+    private void setTranslucentStatus() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //透明导航栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
+
+        LinearLayout linear_bar = (LinearLayout) findViewById(R.id.linear_bar);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) linear_bar.getLayoutParams();
+        params.height = getStatusBarHeight();
+        linear_bar.setLayoutParams(params);
+    }
+
+    public int getStatusBarHeight(){
+        try
+        {
+            Class<?> c=Class.forName("com.android.internal.R$dimen");
+            Object obj=c.newInstance();
+            Field field=c.getField("status_bar_height");
+            int x=Integer.parseInt(field.get(obj).toString());
+            return  getResources().getDimensionPixelSize(x);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     @Override
@@ -159,14 +216,16 @@ public class MusicPlayerActivity extends ActionBarActivity implements View.OnCli
     private Runnable run = new Runnable() {
         @Override
         public void run() {
-            int totalTime = musicPlayerService.getmMediaPlayer().getDuration();
-            int currentTime = musicPlayerService.getmMediaPlayer().getCurrentPosition();
+            if (musicPlayerService != null){
+                int totalTime = musicPlayerService.getmMediaPlayer().getDuration();
+                int currentTime = musicPlayerService.getmMediaPlayer().getCurrentPosition();
 
-            pb_music.setMax(totalTime);
-            pb_music.setProgress(currentTime);
+                pb_music.setMax(totalTime);
+                pb_music.setProgress(currentTime);
 
-            tv_music_totalTime.setText(millionTimeToMunites(totalTime));
-            tv_music_currentTime.setText(millionTimeToMunites(currentTime));
+                tv_music_totalTime.setText(millionTimeToMunites(totalTime));
+                tv_music_currentTime.setText(millionTimeToMunites(currentTime));
+            }
 
             handler.postDelayed(this,1000);
         }
@@ -195,6 +254,9 @@ public class MusicPlayerActivity extends ActionBarActivity implements View.OnCli
                     iv_music_play.setImageResource(R.drawable.lock_btn_pause);
                     animation.cancel();
                     animation.start();
+
+                    Bitmap bitmap = createAlbumArt(musicInfo.getPath());
+
                     break;
                 case Contants.MUSIC_BUTTOM_ACTION_PLAY_MUSIC:
                     iv_music_play.setImageResource(R.drawable.lock_btn_pause);
@@ -208,4 +270,38 @@ public class MusicPlayerActivity extends ActionBarActivity implements View.OnCli
         }
     }
 
+    public Bitmap createAlbumArt(final String filePath) {
+        Bitmap bitmap = null;
+        //能够获取多媒体文件元数据的类
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(filePath); //设置数据源
+            byte[] embedPic = retriever.getEmbeddedPicture(); //得到字节型数据
+            bitmap = BitmapFactory.decodeByteArray(embedPic, 0, embedPic.length); //转换为图片
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        return bitmap;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case  android.R.id.home:
+                tilesFrameLayout.startAnimation();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onAnimationFinished() {
+        onBackPressed();
+    }
 }

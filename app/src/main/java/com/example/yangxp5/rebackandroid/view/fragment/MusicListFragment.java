@@ -3,12 +3,12 @@ package com.example.yangxp5.rebackandroid.view.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.yangxp5.rebackandroid.LocalMusicActivity;
 import com.example.yangxp5.rebackandroid.R;
@@ -28,6 +28,7 @@ public class MusicListFragment extends Fragment implements View.OnClickListener 
     private LinearLayout ll_localMusicLayout;
     private LinearLayout ll_historyMusicLayout;
     private LinearLayout ll_downloadManageLayout;
+    private SwipeRefreshLayout wrl_refresh;
 
     //member
     private List<String> groupList;
@@ -65,6 +66,7 @@ public class MusicListFragment extends Fragment implements View.OnClickListener 
         View view = inflater.inflate(R.layout.fragment_music_list, container, false);
 
         initView(view);
+        setEvent();
 
         listViewAdapter = new ExpanableListViewAdapter(getActivity(),groupList,dataList);
         mExpandableListView.setAdapter(listViewAdapter);
@@ -72,7 +74,16 @@ public class MusicListFragment extends Fragment implements View.OnClickListener 
             mExpandableListView.expandGroup(i);
         }
 
-        setEvent();
+        wrl_refresh.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        wrl_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+            }
+        });
 
         return view;
     }
@@ -88,6 +99,7 @@ public class MusicListFragment extends Fragment implements View.OnClickListener 
         ll_localMusicLayout = (LinearLayout) view.findViewById(R.id.ll_localMusicLayout);
         ll_historyMusicLayout = (LinearLayout) view.findViewById(R.id.ll_historyMusicLayout);
         ll_downloadManageLayout = (LinearLayout) view.findViewById(R.id.ll_downloadManageLayout);
+        wrl_refresh = (SwipeRefreshLayout) view.findViewById(R.id.wrl_refresh);
     }
 
     @Override

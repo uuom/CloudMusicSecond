@@ -20,6 +20,8 @@ import com.example.yangxp5.rebackandroid.model.MusicInfo;
 import com.example.yangxp5.rebackandroid.service.MusicPlayerService;
 import com.example.yangxp5.rebackandroid.utils.Contants;
 
+import de.greenrobot.event.EventBus;
+
 public class MusicButtomFragment extends Fragment {
 
     private ImageView iv_musicImg;
@@ -33,6 +35,12 @@ public class MusicButtomFragment extends Fragment {
 
     public MusicButtomFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -99,6 +107,14 @@ public class MusicButtomFragment extends Fragment {
         ly_music = (LinearLayout) view.findViewById(R.id.ly_music);
     }
 
+    public void onEvent(MusicInfo event){
+        System.out.println(">>>>>>>>>>>>" + event.getTitle());
+        tv_title.setText(event.getTitle());
+        iv_play.setImageResource(R.drawable.playbar_btn_pause);
+        tv_artist.setText(event.getArtist());
+        currentStatus = 1;
+    }
+
 
     class MusicButtomBroadcastReceiver extends BroadcastReceiver{
 
@@ -106,11 +122,11 @@ public class MusicButtomFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (Contants.MUSIC_BUTTOM_ACTION_CHANGE_MUSIC.equals(action)){
-                MusicInfo musicInfo = intent.getExtras().getParcelable(Contants.EXTRA_KEY_SINGLE_MUSICINFO);
-                tv_title.setText(musicInfo.getTitle());
-                iv_play.setImageResource(R.drawable.playbar_btn_pause);
-                tv_artist.setText(musicInfo.getArtist());
-                currentStatus = 1;
+//                MusicInfo musicInfo = intent.getExtras().getParcelable(Contants.EXTRA_KEY_SINGLE_MUSICINFO);
+//                tv_title.setText(musicInfo.getTitle());
+//                iv_play.setImageResource(R.drawable.playbar_btn_pause);
+//                tv_artist.setText(musicInfo.getArtist());
+//                currentStatus = 1;
             }else if (Contants.MUSIC_BUTTOM_ACTION_STOP_MUSIC.equals(action)){
                 iv_play.setImageResource(R.drawable.playbar_btn_play);
                 currentStatus = 0;

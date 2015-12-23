@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.yangxp5.rebackandroid.R;
@@ -15,8 +16,6 @@ import com.example.yangxp5.rebackandroid.model.MusicInfo;
 import com.example.yangxp5.rebackandroid.service.MusicPlayerService;
 import com.example.yangxp5.rebackandroid.view.adapter.MusicListAdapter;
 import com.example.yangxp5.rebackandroid.view.part.DividerItemDecoration;
-
-import java.util.List;
 
 /**
  * Created by yangxp5 on 2015/12/11.
@@ -26,6 +25,7 @@ public class MusicFragment  extends Fragment {
     //view
     private RecyclerView rv_musicList;
     private TextView tv_musicTotal;
+    private LinearLayout ll_allMusic;
 
     //remember
     private MusicListAdapter mMusicListAdapter;
@@ -57,6 +57,18 @@ public class MusicFragment  extends Fragment {
         initView(view);
 
         tv_musicTotal.setText("播放全部(共" + dataList.length + "首)");
+        ll_allMusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), MusicPlayerService.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArray(MusicPlayerService.ARGS_MUSIC_LIST_KEY,dataList);
+                intent.putExtra(MusicPlayerService.ARGS_MUSIC_CURRENT_POSITION_KEY,0);
+                intent.putExtras(bundle);
+                getActivity().startService(intent);
+            }
+        });
+
         mMusicListAdapter = new MusicListAdapter(dataList);
         mMusicListAdapter.setItemClickListener(new MusicListAdapter.OnItemClickListener() {
             @Override
@@ -81,6 +93,7 @@ public class MusicFragment  extends Fragment {
     private void initView(View view) {
         rv_musicList = (RecyclerView) view.findViewById(R.id.rv_musicList);
         tv_musicTotal = (TextView) view.findViewById(R.id.tv_musicTotal);
+        ll_allMusic = (LinearLayout) view.findViewById(R.id.ll_allMusic);
     }
 
 }

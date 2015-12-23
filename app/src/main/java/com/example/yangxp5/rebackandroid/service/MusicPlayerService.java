@@ -13,6 +13,8 @@ import com.example.yangxp5.rebackandroid.utils.Contants;
 
 import java.io.IOException;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * Created by yangxp5 on 2015/12/14.
  */
@@ -114,6 +116,8 @@ public class MusicPlayerService extends Service {
         broadcastIntent1.setAction(Contants.MUSIC_BUTTOM_ACTION_CHANGE_MUSIC);
         broadcastIntent1.putExtra(Contants.EXTRA_KEY_SINGLE_MUSICINFO, musicInfo);
         LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent1);
+
+        EventBus.getDefault().post(musicInfo);
     }
 
     private int prevPosition(){

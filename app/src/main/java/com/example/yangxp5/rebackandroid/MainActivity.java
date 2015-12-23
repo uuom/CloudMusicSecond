@@ -1,5 +1,6 @@
 package com.example.yangxp5.rebackandroid;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -7,9 +8,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.example.yangxp5.rebackandroid.view.adapter.MainTabsAdapter;
+
+import java.lang.reflect.Field;
 
 
 public class MainActivity extends MusicBaseActivity {
@@ -68,9 +73,37 @@ public class MainActivity extends MusicBaseActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+
+        setTranslucentStatus();
     }
 
+    private void setTranslucentStatus() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //透明导航栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
 
+        LinearLayout linear_bar = (LinearLayout) findViewById(R.id.linear_bar);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) linear_bar.getLayoutParams();
+        params.height = getStatusBarHeight();
+        linear_bar.setLayoutParams(params);
+    }
+
+    public int getStatusBarHeight(){
+        try
+        {
+            Class<?> c=Class.forName("com.android.internal.R$dimen");
+            Object obj=c.newInstance();
+            Field field=c.getField("status_bar_height");
+            int x=Integer.parseInt(field.get(obj).toString());
+            return  getResources().getDimensionPixelSize(x);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

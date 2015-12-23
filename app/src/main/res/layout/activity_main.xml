@@ -6,6 +6,15 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <LinearLayout
+        android:id="@+id/linear_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:orientation="vertical"
+        android:background="?attr/colorPrimary"
+        >
+    </LinearLayout>
+
     <include layout="@layout/toolbar" />
 
     <android.support.v4.widget.DrawerLayout
